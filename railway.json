@@ -1,0 +1,9 @@
+{
+  "build": {
+    "rootDirectory": "/backend",
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "java -jar target/*.jar"
+  }
+}
