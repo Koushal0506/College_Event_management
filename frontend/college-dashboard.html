@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Dashboard - EventHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-dark-900 text-white font-sans antialiased">
+
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 w-64 bg-dark-800 border-r border-white/5 z-20">
+        <div class="flex items-center justify-center h-20 border-b border-white/5">
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+                EventHub</h1>
+        </div>
+        <div class="p-4 space-y-2">
+            <a href="#" class="block px-4 py-3 rounded-lg bg-purple-500/10 text-purple-400 font-medium">Dashboard</a>
+            <a href="#create-event" class="block px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">Create
+                Event</a>
+            <a href="#my-events" class="block px-4 py-3 rounded-lg hover:bg-white/5 transition-colors">My Events</a>
+            <a href="#" id="logoutBtn"
+                class="block px-4 py-3 rounded-lg hover:bg-white/5 text-red-400 transition-colors mt-8">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-10">
+            <div>
+                <h2 class="text-3xl font-bold">College <span id="userName" class="text-purple-400">Panel</span></h2>
+                <p class="text-gray-400">Manage your events and participants</p>
+            </div>
+            <div
+                class="h-10 w-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-600 overflow-hidden text-center leading-10 font-bold">
+                C
+            </div>
+        </div>
+
+        <!-- Create Event Section -->
+        <div class="mb-10" id="create-event">
+            <h3 class="text-xl font-bold mb-6">Create New Event</h3>
+            <div class="glass-card p-8 rounded-2xl max-w-3xl">
+                <form id="createEventForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Event Title</label>
+                        <input type="text" id="eventTitle" required
+                            class="w-full bg-dark-800/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                            <select id="eventCategory"
+                                class="w-full bg-dark-800/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+                                <option value="Technical">Technical</option>
+                                <option value="Cultural">Cultural</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Workshop">Workshop</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Date</label>
+                            <input type="datetime-local" id="eventDate" required
+                                class="w-full bg-dark-800/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                        <textarea id="eventDescription" rows="4"
+                            class="w-full bg-dark-800/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Venue</label>
+                            <input type="text" id="eventVenue" required
+                                class="w-full bg-dark-800/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Max Participants</label>
+                            <input type="number" id="eventMax"
+                                class="w-full bg-dark-800/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all w-full">
+                        Publish Event
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- My Events List -->
+        <div class="mb-10" id="my-events">
+            <h3 class="text-xl font-bold mb-6">My Events</h3>
+            <div class="glass-card rounded-2xl overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-white/5 text-gray-400 text-sm uppercase">
+                        <tr>
+                            <th class="px-6 py-4">Title</th>
+                            <th class="px-6 py-4">Date</th>
+                            <th class="px-6 py-4">Category</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5" id="myEventsTableBody">
+                        <!-- JS Populated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="assets/js/dashboard.js"></script>
+</body>
+
+</html>
