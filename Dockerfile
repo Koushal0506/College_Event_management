@@ -1,5 +1,6 @@
 # Build Stage
 FROM maven:3.8.5-openjdk-17 AS build
+ENV MAVEN_OPTS="-Xmx256m -Xms256m"
 WORKDIR /app
 
 # Copy the entire project
