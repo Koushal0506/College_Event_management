@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: college-event-management
+    env: docker
+    plan: free
+    region: singapore # Closest to us-west1/India usually, or let Render decide defaults but explicit is okay. actually let's omit region to let user pick or default.
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://CollegeEvent:Sbbatadetumko@cluster0.m51u1iz.mongodb.net/college-events?retryWrites=true&w=majority&appName=Cluster0
+      - key: PORT
+        value: 8080
