@@ -33,6 +33,102 @@ async function loadDashboardData() {
     }
 }
 
+async function loadAdminData(user) {
+    try {
+        // 1. Fetch Stats (Simple count from lists for now)
+        const pendingRes = await fetch(`${API_URL}/admin/pending-colleges`, {
+            headers: { 'Authorization': 'Bearer ' + user.token }
+        });
+        const pending = await pendingRes.json();
+
+        const eventsRes = await fetch(`${API_URL}/events`); // Public endpoint
+        const events = await eventsRes.json();
+
+        document.getElementById('pendingApprovalsCount').textContent = pending.length;
+        document.getElementById('totalEventsCount').textContent = events.length;
+
+        // 2. Render Pending Table
+        renderPendingTable(pending, user.token);
+
+        // 3. Render Events Table
+        renderAdminEventsTable(events, user.token);
+
+    } catch (e) {
+        console.error("Error loading admin data", e);
+    }
+}
+
+function renderPendingTable(colleges, token) {
+    const tbody = document.getElementById('collegesTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    colleges.forEach(college => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+            <td class="px-6 py-4 font-medium text-white">${college.name}</td>
+            <td class="px-6 py-4 text-gray-400">${college.email}</td>
+            <td class="px-6 py-4 text-gray-400">${college.location || '-'}</td>
+            <td class="px-6 py-4"><span class="px-2 py-1 bg-yellow-500/10 text-yellow-500 text-xs rounded-full">Pending</span></td>
+            <td class="px-6 py-4 space-x-2">
+                <button onclick="approveCollege('${college.id}', '${token}')" class="text-green-400 hover:text-green-300 text-sm">Approve</button>
+                <button onclick="rejectCollege('${college.id}', '${token}')" class="text-red-400 hover:text-red-300 text-sm">Reject</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function renderAdminEventsTable(events, token) {
+    const tbody = document.getElementById('adminEventsTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    events.forEach(event => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5 transition-colors';
+        tr.innerHTML = `
+            <td class="px-6 py-4 font-medium text-white">${event.title}</td>
+            <td class="px-6 py-4 text-gray-400">${event.collegeName || 'Unknown'}</td>
+            <td class="px-6 py-4 text-gray-400">${new Date(event.eventDate).toLocaleDateString()}</td>
+            <td class="px-6 py-4 text-gray-400">${event.status}</td>
+            <td class="px-6 py-4">
+                <button onclick="deleteEvent('${event.id}')" class="text-red-400 hover:text-red-300 text-sm">Delete</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+async function approveCollege(id, token) {
+    if (!confirm('Approve this college?')) return;
+    try {
+        const res = await fetch(`${API_URL}/admin/approve/${id}`, {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (res.ok) {
+            alert('Approve!');
+            loadDashboardData();
+        }
+    } catch (e) { console.error(e); }
+}
+
+async function rejectCollege(id, token) {
+    if (!confirm('Reject this college?')) return;
+    try {
+        const res = await fetch(`${API_URL}/admin/reject/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (res.ok) {
+            alert('Rejected');
+            loadDashboardData();
+        }
+    } catch (e) { console.error(e); }
+}
+
 // Global variable to store events for modal access
 let allEvents = [];
 
@@ -97,10 +193,12 @@ async function loadCollegeData(user) {
                     form.reset();
                     loadMyEvents(user);
                 } else {
-                    alert('Failed to create event');
+                    const errorData = await res.json();
+                    alert('Failed: ' + (errorData.message || 'Unknown error'));
                 }
             } catch (err) {
                 console.error(err);
+                alert('Connection error. Please try again.');
             }
         });
     }
