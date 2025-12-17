@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
     Boolean existsByEmail(String email);
+    
+    List<User> findByRoleAndIsApproved(com.college.eventapp.model.Role role, boolean isApproved);
 }

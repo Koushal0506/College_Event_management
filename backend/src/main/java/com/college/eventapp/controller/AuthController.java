@@ -88,7 +88,9 @@ public class AuthController {
         if (role == Role.STUDENT) {
             user.setCollegeName(signUpRequest.getCollegeName());
             user.setBranch(signUpRequest.getBranch());
+            user.setBranch(signUpRequest.getBranch());
             user.setYear(signUpRequest.getYear());
+            user.setApproved(true); // Students are auto-approved
         } else if (role == Role.COLLEGE) {
             user.setCollegeName(signUpRequest.getName()); // College name is the user name basically
             user.setLocation(signUpRequest.getLocation());

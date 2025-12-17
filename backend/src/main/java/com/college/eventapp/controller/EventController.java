@@ -36,6 +36,9 @@ public class EventController {
     @PostMapping
     @PreAuthorize("hasAuthority('COLLEGE') or hasAuthority('ADMIN')")
     public ResponseEntity<?> createEvent(@RequestBody Event event, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (!userDetails.isApproved()) {
+            return ResponseEntity.status(403).body("Your account is pending approval. Please contact Admin.");
+        }
         event.setCollegeId(userDetails.getId());
         // If collegeName not provided, we could fetch it, but let's assume UI sends it or we rely on userDetails
         // But UserDetails mostly has username/email.

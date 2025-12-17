@@ -21,12 +21,15 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(String id, String username, String email, String password,
+    private boolean approved;
+
+    public UserDetailsImpl(String id, String username, String email, String password, boolean approved,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.approved = approved;
         this.authorities = authorities;
     }
 
@@ -39,6 +42,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getName(),
                 user.getEmail(),
                 user.getPassword(),
+                user.isApproved(),
                 authorities);
     }
 
@@ -53,6 +57,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean isApproved() {
+        return approved;
     }
 
     @Override
