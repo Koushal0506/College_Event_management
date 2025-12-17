@@ -58,7 +58,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> 
                 auth.requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/test/**").permitAll()
-                    .requestMatchers("/", "/index.html", "/*.html", "/assets/**", "/css/**", "/js/**", "/images/**").permitAll()
+                    .requestMatchers("/", "/index.html", "/*.html", "/assets/**", "/css/**", "/js/**", "/images/**", "/favicon.ico", "/error").permitAll()
                     .anyRequest().authenticated()
             );
         
